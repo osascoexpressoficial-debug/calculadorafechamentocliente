@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Fechamento — Osasco Express</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════
+   TOKENS
+════════════════════════════════════════ */
+:root{
+  --brand:#EA1D2C; --brand-d:#C0001A; --brand-soft:rgba(234,29,44,.08); --brand-border:rgba(234,29,44,.2);
+  --topbar:#18191B;
+  --bg:#F4F5F7; --surface:#FFFFFF; --surface2:#F9FAFB; --border:#E4E7EC; --border2:#D0D5DD;
+  --text:#101828; --sub:#344054; --muted:#667085; --hint:#98A2B3;
+  --grn:#027A48; --grn-soft:#ECFDF3; --grn-bd:#6CE9A6;
+  --red:#B42318; --red-soft:#FEF3F2; --red-bd:#FCA5A5;
+  --yel:#B54708; --yel-soft:#FFFAEB; --yel-bd:#FEC84B;
+  --blu:#1D4ED8; --blu-soft:#EFF6FF; --blu-bd:#93C5FD;
+  --pur:#6941C6; --pur-soft:#F9F5FF; --pur-bd:#D6BBFB;
+  --r:10px; --r-sm:6px; --r-lg:14px; --r-xl:18px;
+  --sh-sm:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);
+  --sh-md:0 4px 16px rgba(16,24,40,.08),0 2px 6px rgba(16,24,40,.05);
+  --sh-lg:0 20px 48px rgba(16,24,40,.12),0 8px 16px rgba(16,24,40,.06);
+  --font:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono','Consolas',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:15px;overflow-x:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;max-width:100vw}
+
+/* ════ TOPBAR ════ */
+.topbar{background:var(--topbar);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:300;box-shadow:0 1px 0 rgba(255,255,255,.06)}
+.tb-left{display:flex;align-items:center;gap:12px}
+.logo{width:32px;height:32px;background:var(--brand);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;flex-shrink:0;letter-spacing:-.5px}
+.bc{font-size:12px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:5px}
+.bc .cur{color:rgba(255,255,255,.85);font-weight:600}
+.bc-sep{color:rgba(255,255,255,.2)}
+.status-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.55)}
+.status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* ════ TABS ════ */
+.tabs-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:2px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;position:sticky;top:56px;z-index:200;max-width:100vw}
+.tabs-bar::-webkit-scrollbar{display:none}
+.tab{padding:14px 16px;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:7px;white-space:nowrap;flex-shrink:0;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font)}
+.tab:hover{color:var(--sub)}.tab.on{color:var(--brand);border-bottom-color:var(--brand)}
+.tab-badge{background:var(--brand-soft);color:var(--brand);padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700}
+
+/* ════ LAYOUT ════ */
+.main{max-width:900px;margin:0 auto;padding:24px 16px 100px;overflow-x:hidden}
+.page-header{margin-bottom:22px}
+.page-title{font-size:20px;font-weight:800;letter-spacing:-.4px}
+.page-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.panel{display:none}.panel.on{display:block}
+.two-col{display:grid;grid-template-columns:1fr 280px;gap:14px;align-items:start}
+.sticky-aside{position:sticky;top:76px}
+
+/* ════ CARD ════ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;margin-bottom:14px;box-shadow:var(--sh-sm);animation:rise .28s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.card-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;color:var(--sub)}
+.card-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.ic-brand{background:rgba(234,29,44,.1)}.ic-grn{background:var(--grn-soft)}.ic-blu{background:var(--blu-soft)}.ic-yel{background:var(--yel-soft)}.ic-pur{background:var(--pur-soft)}.ic-red{background:var(--red-soft)}
+.card-sub{font-size:11px;color:var(--hint)}
+
+/* ════ FORM ════ */
+.grid{display:grid;gap:12px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.field input,.field select,.field textarea{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:13px;padding:8px 11px;transition:border .18s,box-shadow .18s;outline:none;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.field input[type=number]{font-family:var(--mono)}.field select option{background:var(--surface)}
+.field textarea{resize:vertical;min-height:64px}
+
+/* ════ WEEKS CHIPS ════ */
+.week-nav{display:flex;align-items:center;gap:8px;margin-top:10px}
+.week-select{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:13px;font-weight:600;padding:8px 11px;outline:none;cursor:pointer;transition:border .18s}
+.week-select:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.week-arr{width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);cursor:pointer;font-size:16px;color:var(--sub);transition:all .18s;font-family:var(--font)}
+.week-arr:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+.week-arr:disabled{opacity:.3;cursor:not-allowed}
+
+/* ════ CLIENT SELECT CARDS ════ */
+.cli-selector{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+.cli-card{border:2px solid var(--border);border-radius:var(--r-lg);padding:16px;cursor:pointer;transition:all .2s;background:var(--surface);position:relative;overflow:hidden}
+.cli-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--brand);transform:scaleX(0);transition:transform .2s;transform-origin:left}
+.cli-card:hover{border-color:var(--brand-border);box-shadow:var(--sh-md)}.cli-card:hover::before,.cli-card.on::before{transform:scaleX(1)}
+.cli-card.on{border-color:var(--brand);background:var(--brand-soft)}
+.cli-name{font-size:14px;font-weight:700;margin-bottom:4px}
+.cli-meta{font-size:11px;color:var(--muted);line-height:1.65}
+.cli-type{display:inline-flex;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-top:6px}
+.ct-fixo{background:var(--blu-soft);color:var(--blu)}.ct-flex{background:var(--pur-soft);color:var(--pur)}
+
+/* ════ DAY LIST (layout vertical, responsivo) ════ */
+.day-list{display:flex;flex-direction:column;gap:6px}
+.day-row{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
+.day-row.inactive{opacity:.32}
+.day-row-head{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--surface);border-bottom:1px solid var(--border)}
+.day-row-name{font-size:12px;font-weight:700;color:var(--sub);display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.3px}
+.day-row-total{font-family:var(--mono);font-size:13px;font-weight:800;color:var(--brand)}
+.day-row-body{padding:0 14px}
+.shift-line{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.shift-line:last-child{border-bottom:none}
+.shift-nm{color:var(--muted);font-size:12px;flex:1}
+.shift-right{display:flex;align-items:center;gap:8px}
+.qty-input{width:56px;background:var(--surface);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--mono);text-align:center;padding:6px 4px;font-size:14px;font-weight:700;outline:none;transition:all .18s}
+.qty-input:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.shift-rate{font-size:10px;color:var(--hint);white-space:nowrap;min-width:44px;text-align:right}
+.day-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px}
+.b-sem{background:var(--blu-soft);color:var(--blu)}.b-fds{background:rgba(234,29,44,.1);color:var(--brand)}
+.inactive-label{font-size:11px;color:var(--hint);padding:8px 14px}
+
+/* ════ BIG INPUTS ════ */
+.big-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.big-box{background:var(--surface2);border:2px solid var(--border);border-radius:var(--r-lg);padding:16px;text-align:center;transition:border .2s}
+.big-box:focus-within{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.big-label{font-size:10px;color:var(--hint);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:8px}
+.big-box input{background:transparent;border:none;font-family:var(--mono);font-size:26px;font-weight:800;color:var(--text);text-align:center;outline:none;width:100%;padding:2px 0}
+.big-box input.accent{color:var(--brand)}.big-box input::placeholder{color:var(--border2)}
+.big-hint{font-size:11px;color:var(--hint);margin-top:4px}
+
+/* ════ OCCURRENCES TABLE ════ */
+.oc-table{width:100%;border-collapse:collapse}
+.oc-table th{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:7px 10px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+.oc-table td{padding:8px 10px;border-bottom:1px solid var(--border);font-size:12px}
+.oc-table tr:last-child td{border-bottom:none}.oc-table tr:hover td{background:var(--surface2)}
+.oc-empty{text-align:center;color:var(--hint);padding:20px!important;font-size:12px}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+.bfalta{background:var(--red-soft);color:var(--red)}.bparcial{background:var(--yel-soft);color:var(--yel)}
+.batraso{background:var(--pur-soft);color:var(--pur)}.bsem{background:var(--blu-soft);color:var(--blu)}.bfds{background:rgba(234,29,44,.08);color:var(--brand)}
+
+/* ════ PLAN TIERS ════ */
+.tiers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:12px}
+.tier{background:var(--surface2);border:2px solid var(--border);border-radius:var(--r-sm);padding:12px;cursor:pointer;transition:all .18s;position:relative;text-align:center}
+.tier:hover{border-color:var(--brand-border)}.tier.on{border-color:var(--brand);background:var(--brand-soft)}
+.tier.on::after{content:'✓';position:absolute;top:6px;right:8px;color:var(--brand);font-weight:800;font-size:11px}
+.tier-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;font-weight:700}
+.tier-price{font-family:var(--mono);font-size:18px;font-weight:800;color:var(--brand)}
+.tier-nm{font-size:10px;color:var(--hint);margin-top:2px}
+
+/* ════ TOGGLE ════ */
+.tog-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.toggle{width:38px;height:21px;background:var(--border2);border-radius:11px;cursor:pointer;position:relative;transition:background .2s;border:none;flex-shrink:0}
+.toggle::after{content:'';position:absolute;top:2.5px;left:2.5px;width:16px;height:16px;border-radius:50%;background:#fff;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on{background:var(--brand)}.toggle.on::after{left:19.5px}
+.tog-label{font-size:13px;color:var(--sub);font-weight:500}
+
+/* ════ TOTALIZADOR ════ */
+.total-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:20px;box-shadow:var(--sh-md)}
+.tot-title{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.tot-client{font-size:15px;font-weight:800;margin-bottom:2px}
+.tot-period{font-size:11px;color:var(--muted);background:var(--surface2);padding:3px 9px;border-radius:5px;display:inline-block;margin-bottom:14px}
+.tot-line{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px}
+.tot-line:last-of-type{border-bottom:none}
+.tot-line .l{color:var(--muted)}.tot-line .v{font-family:var(--mono);font-weight:600}
+.tot-line .v.accent{color:var(--brand)}.tot-line .v.neg{color:var(--red)}.tot-line .v.dim{color:var(--hint)}
+.tot-div{border:none;border-top:1px dashed var(--border2);margin:8px 0}
+.tot-final{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;padding-top:12px;border-top:2px solid var(--border)}
+.tot-final .l{font-size:15px;font-weight:800}
+.tot-final .v{font-family:var(--mono);font-size:32px;font-weight:900;color:var(--brand);letter-spacing:-1.5px;line-height:1}
+@keyframes pop{from{transform:scale(.9);opacity:.6}to{transform:scale(1);opacity:1}}
+.tot-detail{font-size:10px;color:var(--hint);line-height:2;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+
+/* ════ DISCOUNT BOX ════ */
+.disc-box{background:var(--red-soft);border:1px solid rgba(180,35,24,.18);border-radius:var(--r-sm);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-top:9px}
+.disc-l{font-size:12px;color:var(--red);font-weight:600}.disc-v{font-family:var(--mono);font-size:14px;font-weight:800;color:var(--red)}
+
+/* ════ BUTTONS ════ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 16px;border-radius:var(--r-sm);border:none;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:all .18s;text-decoration:none}
+.btn-brand{background:var(--brand);color:#fff;box-shadow:0 2px 8px rgba(234,29,44,.25)}.btn-brand:hover{background:var(--brand-d);transform:translateY(-1px);box-shadow:0 4px 14px rgba(234,29,44,.35)}
+.btn-ghost{background:var(--surface);color:var(--sub);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--border2);color:var(--text)}
+.btn-grn{background:var(--grn-soft);color:var(--grn);border:1px solid var(--grn-bd)}.btn-grn:hover{background:#d1fae5}
+.btn-red{background:var(--red-soft);color:var(--red);border:1px solid var(--red-bd);font-size:10px;padding:4px 8px}.btn-red:hover{background:#fee2e2}
+.btn-sm{font-size:11px;padding:6px 12px}
+.add-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:9px;background:var(--surface2);border:1px dashed var(--border2);border-radius:var(--r-sm);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;font-family:var(--font)}
+.add-btn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+.act-bar{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+
+/* ════ CLIENT GRID (banco) ════ */
+.client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.cc{background:var(--surface);border:2px solid var(--border);border-radius:var(--r-lg);padding:18px;transition:all .22s;position:relative;overflow:hidden}
+.cc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--brand);transform:scaleX(0);transition:transform .22s;transform-origin:left}
+.cc:hover{border-color:var(--brand-border);box-shadow:var(--sh-md)}.cc:hover::before{transform:scaleX(1)}
+.cc-nm{font-size:14px;font-weight:700;margin-bottom:6px}.cc-info{font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:10px}
+.cc-stats{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.cc-stat .v{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--brand)}.cc-stat .l{font-size:10px;color:var(--hint)}
+.cc-actions{display:flex;gap:6px}
+
+/* ════ MODAL / OVERLAY ════ */
+.ov{position:fixed;inset:0;background:rgba(16,24,40,.54);display:flex;align-items:center;justify-content:center;z-index:500;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(3px)}
+.ov.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:24px;max-width:500px;width:94%;transform:translateY(16px);transition:transform .2s;max-height:90vh;overflow-y:auto;box-shadow:var(--sh-lg)}
+.ov.open .modal{transform:translateY(0)}
+.modal-title{font-size:16px;font-weight:800;margin-bottom:3px}.modal-sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+
+/* ════ ATRASO CALC BOX ════ */
+.at-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;margin-top:10px;display:none}
+.at-det{font-size:12px;color:var(--sub);line-height:1.9}
+.at-tot{font-size:15px;font-weight:800;color:var(--red);margin-top:7px}
+
+/* ════ PLANS TABLE ════ */
+.plans-table{width:100%;border-collapse:collapse}
+.plans-table th{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:8px 10px;border-bottom:1px solid var(--border);text-align:left}
+.plans-table td{padding:8px 10px;border-bottom:1px solid var(--border);font-size:13px}
+.plans-table tr:last-child td{border-bottom:none}.plans-table tr:hover td{background:var(--surface2)}
+.plans-table input{background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;padding:5px 8px;outline:none;width:100%}
+.plans-table input:focus{border-color:var(--brand)}
+
+/* ════ INFO RULE BOX ════ */
+.rule-box{background:var(--yel-soft);border:1px solid var(--yel-bd);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;color:var(--yel);line-height:1.8}
+.rule-box b{color:var(--text)}
+.flex-info{background:var(--pur-soft);border:1px solid var(--pur-bd);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;color:var(--pur);margin-bottom:14px;line-height:1.7}
+
+/* ════ TOAST ════ */
+.toast{position:fixed;bottom:24px;right:20px;background:var(--topbar);color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:var(--r-sm);padding:11px 15px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:9px;box-shadow:var(--sh-lg);z-index:600;transform:translateY(64px);opacity:0;transition:all .3s;max-width:280px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ════ EDITOR CLIENT ════ */
+.cli-editor{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;margin-top:12px;display:none}
+.cli-editor.open{display:block;animation:rise .25s ease}
+
+/* ════ RESPONSIVE ════ */
+/* TABLET */
+@media(max-width:820px){
+  .two-col{grid-template-columns:1fr}
+  .sticky-aside{position:static}
+  .g3{grid-template-columns:1fr 1fr}
+  .g4{grid-template-columns:1fr 1fr}
+  .total-box{margin-top:0}
+}
+/* MOBILE */
+@media(max-width:520px){
+  .main{padding:12px 12px 80px}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .big-grid{grid-template-columns:1fr}
+  .tiers-grid{grid-template-columns:1fr 1fr}
+  .page-title{font-size:17px}
+  .tot-final .v{font-size:24px}
+  .card{padding:14px}
+  .cli-selector{grid-template-columns:1fr}
+  .topbar{padding:0 14px}
+  .tabs-bar{padding:0 12px}
+}
+
+/* Tabela de ocorrências: colapsa colunas em mobile */
+@media(max-width:520px){
+  .oc-table .hide-mob{display:none}
+  .oc-table td,.oc-table th{padding:6px 7px;font-size:11px}
+  .plans-table td,.plans-table th{padding:6px 7px;font-size:11px}
+  .shift-rate{display:none}
+}
+
+/* ════ RELATÓRIO / ENVIO ════ */
+.rel-modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:24px;max-width:480px;width:94%;transform:translateY(16px);transition:transform .2s;max-height:92vh;overflow-y:auto;box-shadow:var(--sh-lg)}
+.ov.open .rel-modal{transform:translateY(0)}
+.rel-card{background:#0d1117;border-radius:12px;padding:20px;font-family:'DM Mono','Consolas',monospace;font-size:13px;line-height:1.85;color:#e2e8f0;white-space:pre-wrap;word-break:break-word;margin-bottom:16px;border:1px solid #2d3748}
+.rel-actions{display:flex;flex-direction:column;gap:8px}
+.btn-wpp{background:#25D366;color:#fff;font-size:14px;font-weight:700;padding:13px 20px;border-radius:var(--r-sm);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;font-family:var(--font);transition:all .18s;box-shadow:0 2px 10px rgba(37,211,102,.3)}
+.btn-wpp:hover{background:#1ebe5d;transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,211,102,.4)}
+.btn-copy{background:var(--surface2);color:var(--sub);border:1px solid var(--border);font-size:13px;font-weight:600;padding:10px 16px;border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;font-family:var(--font);transition:all .18s}
+.btn-copy:hover{border-color:var(--brand);color:var(--brand)}
+.pix-row{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.pix-key{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);flex:1}
+.pix-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="logo">OE</div>
+    <nav class="bc">
+      <span>Financeiro</span><span class="bc-sep">›</span>
+      <span class="cur">Fechamento Semanal</span>
+    </nav>
+  </div>
+  <div class="status-pill">
+    <span class="status-dot" id="sDot" style="background:#4B5563"></span>
+    <span id="sLbl">Rascunho</span>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-bar">
+  <button class="tab on" onclick="goTab('fechamento',this)">📊 Fechamento</button>
+  <button class="tab" onclick="goTab('clientes',this)">🏪 Clientes <span class="tab-badge" id="cCount">3</span></button>
+  <button class="tab" onclick="goTab('planos',this)">💼 Planos</button>
+</div>
+
+<div class="main">
+
+<!-- ═══════════════════════════════════════
+     PANEL FECHAMENTO
+═══════════════════════════════════════ -->
+<div class="panel on" id="panel-fechamento">
+<div class="page-header">
+  <div class="page-title">Fechamento Semanal</div>
+  <div class="page-sub">Selecione o cliente e o período para calcular</div>
+</div>
+
+<div class="two-col">
+<div>
+
+<!-- STEP 1: CLIENTE -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-title"><div class="card-icon ic-brand">🏪</div>Cliente</div>
+  </div>
+  <div class="cli-selector" id="cliSelector"></div>
+</div>
+
+<!-- STEP 2: PERÍODO -->
+<div class="card" id="secPeriod" style="display:none">
+  <div class="card-head">
+    <div class="card-title"><div class="card-icon ic-blu">📅</div>Período</div>
+    <div class="card-sub">Semana completa (seg→dom)</div>
+  </div>
+  <div class="grid g2" style="margin-bottom:10px">
+    <div class="field"><label>Início</label><input type="date" id="dtI" onchange="onDCh()"></div>
+    <div class="field"><label>Fim</label><input type="date" id="dtF" onchange="onDCh()"></div>
+  </div>
+  <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Semana de referência</div>
+  <div class="week-nav">
+    <button class="week-arr" id="wPrev" onclick="navWeek(-1)" title="Semana anterior">‹</button>
+    <select class="week-select" id="weeksBar" onchange="onWeekSelect()"></select>
+    <button class="week-arr" id="wNext" onclick="navWeek(1)" title="Próxima semana">›</button>
+  </div>
+</div>
+
+<!-- STEP 3: CONTRATO -->
+<div class="card" id="secContrato" style="display:none">
+  <div class="card-head">
+    <div class="card-title"><div class="card-icon ic-grn">📋</div>Contrato Fixo</div>
+    <span class="card-sub" id="cTipo"></span>
+  </div>
+  <div id="contratoBody"></div>
+</div>
+
+<!-- STEP 4: ENTREGAS -->
+<div class="card" id="secEntregas" style="display:none">
+  <div class="card-head">
+    <div class="card-title"><div class="card-icon ic-grn">📦</div>Entregas do Período</div>
+    <span class="card-sub">Dados do sistema externo</span>
+  </div>
+  <div class="big-grid">
+    <div class="big-box">
+      <div class="big-label">Total de Entregas</div>
+      <input type="number" id="nEnt" placeholder="0" oninput="calc()">
+      <div class="big-hint">pedidos realizados</div>
+    </div>
+    <div class="big-box">
+      <div class="big-label">Taxa de Entrega R$ <span style="color:var(--brand);font-size:9px">MANUAL</span></div>
+      <input type="number" id="nTax" placeholder="0,00" step="0.01" oninput="calc()" class="accent">
+      <div class="big-hint">informe o valor do relatório</div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 5: OCORRÊNCIAS (só clientes fixos) -->
+<div class="card" id="secOcorr" style="display:none">
+  <div class="card-head">
+    <div class="card-title"><div class="card-icon ic-red">⚠️</div>Faltas e Atrasos</div>
+    <div style="display:flex;gap:7px">
+      <button class="btn btn-ghost btn-sm" onclick="openOv('ovFalta')">➕ Falta</button>
+      <button class="btn btn-ghost btn-sm" onclick="openOv('ovAtraso')">⏱ Atraso</button>
+    </div>
+  </div>
+  <div class="rule-box" id="ruleBox"></div>
+  <div style="margin-top:12px;overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch">
+    <table class="oc-table">
+      <thead><tr><th>Data</th><th>Entregador</th><th>Tipo</th><th class="hide-mob">Detalhe</th><th>Desconto</th><th></th></tr></thead>
+      <tbody id="ocBody"><tr><td colspan="6" class="oc-empty">Nenhuma ocorrência registrada</td></tr></tbody>
+    </table>
+  </div>
+  <div class="disc-box" id="discBox" style="display:none">
+    <span class="disc-l">Total descontos</span>
+    <span class="disc-v" id="discVal"></span>
+  </div>
+</div>
+
+<!-- STEP 6: TAXA ADMINISTRATIVA -->
+<div class="card" id="secAdm" style="display:none">
+  <div class="card-head">
+    <div class="card-title"><div class="card-icon ic-yel">💼</div>Taxa Administrativa</div>
+    <span class="card-sub">Cobrança mensal por volume</span>
+  </div>
+  <div class="tog-row">
+    <button class="toggle" id="togAdm" onclick="togAdmin()"></button>
+    <span class="tog-label">Ativar taxa administrativa neste fechamento</span>
+  </div>
+  <div id="admArea" style="display:none">
+    <div class="grid g2" style="margin-bottom:12px">
+      <div class="field">
+        <label>Volume do mês (entregas)</label>
+        <input type="number" id="nMes" placeholder="Ex: 950" oninput="sugTier()">
+      </div>
+    </div>
+    <div class="tiers-grid" id="tiersGrid"></div>
+  </div>
+</div>
+
+<!-- STEP 7: PIX + OBS -->
+<div class="card" id="secObs" style="display:none">
+  <div class="card-head">
+    <div class="card-title"><div class="card-icon ic-grn">💳</div>Chave PIX para Pagamento</div>
+  </div>
+  <!-- PIX FIXO — CNPJ Osasco Express
+       Chave cadastrada uma vez aqui. Nunca alterar sem atualizar o CNPJ real.
+       Exibida no relatório e copiável pelo usuário no modal de envio. -->
+  <div style="margin-bottom:12px">
+    <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Chave PIX — Osasco Express</div>
+    <div style="display:flex;align-items:center;gap:10px;background:var(--grn-soft);border:1px solid var(--grn-bd);border-radius:var(--r-sm);padding:10px 14px">
+      <span style="font-size:13px;color:var(--text)">🏦</span>
+      <div style="flex:1">
+        <div style="font-family:var(--mono);font-size:14px;font-weight:700;color:var(--grn)" id="nPix">54.707.097/0001-04</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">CNPJ · Osasco Express</div>
+      </div>
+      <button class="btn-copy" style="padding:5px 10px;font-size:11px;flex-shrink:0" onclick="navigator.clipboard.writeText('54.707.097/0001-04').then(()=>toast2('✅','PIX copiado!'))">Copiar</button>
+    </div>
+  </div>
+  <hr style="border:none;border-top:1px solid var(--border);margin:12px 0">
+  <div class="card-title" style="margin-bottom:12px"><div class="card-icon ic-blu">📝</div>Observações</div>
+  <div class="field">
+    <label>Anotações livres</label>
+    <textarea id="nObs" placeholder="Registre ajustes, exceções ou informações relevantes..."></textarea>
+  </div>
+</div>
+
+<!-- AÇÕES -->
+<div class="act-bar" id="actBar" style="display:none">
+  <button class="btn btn-ghost" onclick="toast2('💾','Rascunho salvo com sucesso.')">💾 Salvar Rascunho</button>
+  <button class="btn btn-brand" onclick="gerarFechamento()">✅ Gerar Fechamento</button>
+  <button class="btn-wpp" id="btnEnv" style="display:none;width:auto;padding:10px 18px;font-size:13px;border-radius:var(--r-sm)" onclick="abrirRelatorio()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    Enviar Relatório
+  </button>
+</div>
+
+</div><!-- /left col -->
+
+<!-- TOTALIZADOR -->
+<div class="sticky-aside">
+<div class="total-box" id="totBox" style="display:none">
+  <div class="tot-title">📊 Resumo do Fechamento</div>
+  <div class="tot-client" id="tNm">—</div>
+  <div class="tot-period" id="tPr">—</div>
+
+  <div class="tot-line" id="tl_ds"><span class="l">Dias semana</span><span class="v dim" id="tDS">—</span></div>
+  <div class="tot-line" id="tl_df"><span class="l">Dias FDS/Feriado</span><span class="v dim" id="tDF">—</span></div>
+  <div class="tot-line" id="tl_vds" style="display:none"><span class="l">Diárias semana</span><span class="v accent" id="tVS">R$ 0,00</span></div>
+  <div class="tot-line" id="tl_vdf" style="display:none"><span class="l">Diárias FDS</span><span class="v accent" id="tVF">R$ 0,00</span></div>
+  <div class="tot-line"><span class="l" style="font-weight:700">Subtotal diárias</span><span class="v accent" id="tSD">R$ 0,00</span></div>
+  <div class="tot-div"></div>
+  <div class="tot-line"><span class="l">Taxa de entrega</span><span class="v accent" id="tTE">R$ 0,00</span></div>
+  <div class="tot-line" id="tl_disc" style="display:none"><span class="l" style="color:var(--red)">Descontos</span><span class="v neg" id="tDsc"></span></div>
+  <div class="tot-line" id="tl_adm" style="display:none"><span class="l">Taxa adm.</span><span class="v accent" id="tAd"></span></div>
+  <div class="tot-final">
+    <span class="l">TOTAL</span>
+    <span class="v" id="tTot">R$ 0,00</span>
+  </div>
+  <div class="tot-detail" id="tDet"></div>
+</div>
+</div>
+
+</div><!-- /two-col -->
+</div>
+
+<!-- ═══════════════════════════════════════
+     PANEL CLIENTES
+═══════════════════════════════════════ -->
+<div class="panel" id="panel-clientes">
+<div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px">
+  <div>
+    <div class="page-title">Banco de Clientes</div>
+    <div class="page-sub">Contratos e configurações fixas</div>
+  </div>
+  <button class="btn btn-brand" onclick="openOv('ovNovoCliente')">+ Novo Cliente</button>
+</div>
+<div class="client-grid" id="clientGrid"></div>
+<div class="cli-editor" id="cliEditor">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div style="font-size:14px;font-weight:800" id="edTitle">Editando cliente</div>
+    <div style="display:flex;gap:7px">
+      <button class="btn btn-ghost" onclick="closeEditor()">Cancelar</button>
+      <button class="btn btn-brand" onclick="saveClient()">💾 Salvar</button>
+    </div>
+  </div>
+  <div class="grid g3" style="margin-bottom:12px">
+    <div class="field"><label>Nome do Cliente</label><input type="text" id="edNm"></div>
+    <div class="field"><label>Tipo de Operação</label>
+      <select id="edTp" onchange="renderEdFields()">
+        <option value="fixo">Fixo (turnos por dia)</option>
+        <option value="flexivel">Flexível (qtd variável)</option>
+      </select>
+    </div>
+    <div class="field"><label>Horário</label><input type="text" id="edHr" placeholder="Ex: 18h–00:15"></div>
+  </div>
+  <div class="grid g3" style="margin-bottom:12px">
+    <div class="field"><label>Carga horária (h/turno)</label><input type="number" id="edCH" value="6" min="1" max="24"></div>
+    <div class="field"><label>Diária Seg–Qui R$/ent.</label><input type="number" id="edDS" value="65" oninput="renderEdFields()"></div>
+    <div class="field"><label>Diária Sex–Dom+Fer R$/ent.</label><input type="number" id="edDF" value="70" oninput="renderEdFields()"></div>
+  </div>
+  <div id="edBody"></div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PANEL PLANOS
+═══════════════════════════════════════ -->
+<div class="panel" id="panel-planos">
+<div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px">
+  <div>
+    <div class="page-title">Planos e Taxa Administrativa</div>
+    <div class="page-sub">Faixas de volume com valores editáveis</div>
+  </div>
+  <button class="btn btn-brand" onclick="addPlan()">+ Nova Faixa</button>
+</div>
+<div class="card">
+  <div class="card-head">
+    <div class="card-title"><div class="card-icon ic-yel">💼</div>Faixas de Cobrança Mensal</div>
+    <span class="card-sub">Clique nos campos para editar</span>
+  </div>
+  <div style="overflow-x:auto"><table class="plans-table" id="plansTable"></table></div>
+</div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ═══════════════════════════════════════
+     MODALS
+═══════════════════════════════════════ -->
+
+<!-- MODAL FALTA -->
+<div class="ov" id="ovFalta">
+  <div class="modal">
+    <div class="modal-title">Registrar Falta</div>
+    <div class="modal-sub">O desconto será calculado automaticamente pela diária do dia.</div>
+    <div class="grid g2" style="margin-bottom:10px">
+      <div class="field"><label>Data</label><input type="date" id="fDt"></div>
+      <div class="field"><label>Entregador</label><input type="text" id="fNm" placeholder="Nome"></div>
+    </div>
+    <div class="grid g2" style="margin-bottom:10px">
+      <div class="field"><label>Turno</label>
+        <select id="fTn">
+          <option value="completo">Dia completo</option>
+          <option value="noturno">Noturno</option>
+          <option value="manha">Manhã</option>
+          <option value="reforco">Reforço</option>
+        </select>
+      </div>
+      <div class="field"><label>Tipo</label>
+        <select id="fTp">
+          <option value="falta">Falta total (100%)</option>
+          <option value="parcial">Parcial (50%)</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:10px"><label>Obs.</label><input type="text" id="fOb" placeholder="Opcional..."></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeOv('ovFalta')">Cancelar</button>
+      <button class="btn btn-brand" onclick="confFalta()">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ATRASO -->
+<div class="ov" id="ovAtraso">
+  <div class="modal">
+    <div class="modal-title">Registrar Atraso</div>
+    <div class="modal-sub" id="atSub">Desconto proporcional ao tempo de atraso.</div>
+    <div class="grid g2" style="margin-bottom:10px">
+      <div class="field"><label>Data</label><input type="date" id="aDt" oninput="calcAt()"></div>
+      <div class="field"><label>Entregador</label><input type="text" id="aNm" placeholder="Nome"></div>
+    </div>
+    <div class="grid g2" style="margin-bottom:10px">
+      <div class="field"><label>Horas de atraso</label><input type="number" id="aH" placeholder="0" min="0" step="1" oninput="calcAt()"></div>
+      <div class="field"><label>Minutos</label><input type="number" id="aM" placeholder="0" min="0" max="59" oninput="calcAt()"></div>
+    </div>
+    <div class="at-box" id="atBox">
+      <div class="at-det" id="atDet"></div>
+      <div class="at-tot" id="atTot"></div>
+    </div>
+    <div class="field" style="margin-top:10px;margin-bottom:10px"><label>Obs.</label><input type="text" id="aOb" placeholder="Opcional..."></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeOv('ovAtraso')">Cancelar</button>
+      <button class="btn btn-brand" onclick="confAtraso()">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NOVO CLIENTE -->
+<div class="ov" id="ovNovoCliente">
+  <div class="modal">
+    <div class="modal-title">Novo Cliente</div>
+    <div class="modal-sub">Configure o contrato após criar.</div>
+    <div class="field" style="margin-bottom:10px"><label>Nome</label><input type="text" id="ncNm" placeholder="Nome do cliente"></div>
+    <div class="field" style="margin-bottom:10px">
+      <label>Tipo</label>
+      <select id="ncTp">
+        <option value="fixo">Fixo (turnos por dia)</option>
+        <option value="flexivel">Flexível (qtd variável)</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeOv('ovNovoCliente')">Cancelar</button>
+      <button class="btn btn-brand" onclick="createClient()">Criar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RELATÓRIO -->
+<div class="ov" id="ovRelatorio">
+  <div class="rel-modal">
+    <div class="modal-title" style="margin-bottom:4px">📋 Relatório de Fechamento</div>
+    <div class="modal-sub">Confira antes de enviar ao grupo</div>
+    <div class="rel-card" id="relTexto"></div>
+    <div style="margin-bottom:12px">
+      <div class="pix-lbl" style="margin-bottom:6px">Chave PIX para pagamento</div>
+      <div class="pix-row">
+        <span class="pix-key" id="relPixKey">—</span>
+        <button class="btn-copy" style="padding:6px 10px;font-size:11px" onclick="copiarPix()">Copiar</button>
+      </div>
+    </div>
+    <div class="rel-actions">
+      <button class="btn-wpp" onclick="enviarWhatsApp()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Abrir Grupo de Pagamentos
+      </button>
+      <button class="btn-copy" onclick="copiarTexto()">📋 Copiar texto do relatório</button>
+      <button class="btn btn-ghost" style="justify-content:center" onclick="closeOv('ovRelatorio')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastI"></span><span id="toastM"></span></div>
+
+<script>
+// ══════════════════════════════════════════
+// DADOS GLOBAIS
+// ══════════════════════════════════════════
+const FER = ['2026-01-01','2026-04-21','2026-05-01','2026-06-11','2026-09-07','2026-10-12','2026-11-02','2026-11-15','2026-12-25'];
+const DN = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+let PLANS = [
+  {id:1, lbl:'Até 800 entregas/mês',   max:800,   price:799,  nm:'Básico'},
+  {id:2, lbl:'Até 1.300 entregas/mês', max:1300,  price:1299, nm:'Padrão'},
+  {id:3, lbl:'Até 1.800 entregas/mês', max:1800,  price:1599, nm:'Premium'},
+  {id:4, lbl:'Acima de 1.800',         max:99999, price:0,    nm:'Personalizado', custom:true}
+];
+
+let CLI = [
+  {
+    id:'pastel', nm:'Pastel da Camila', tp:'fixo', hr:'10h–22h', ch:6, ds:65, df:70,
+    dias:{
+      1:{op:false},
+      2:{op:true, tur:[{nm:'Manhã 10h–16h',q:2},{nm:'Reforço 15h–21h',q:1},{nm:'Noturno 16h–22h',q:2}]},
+      3:{op:true, tur:[{nm:'Manhã 10h–16h',q:2},{nm:'Reforço 15h–21h',q:1},{nm:'Noturno 16h–22h',q:2}]},
+      4:{op:true, tur:[{nm:'Manhã 10h–16h',q:2},{nm:'Reforço 15h–21h',q:1},{nm:'Noturno 16h–22h',q:2}]},
+      5:{op:true, tur:[{nm:'Manhã 10h–16h',q:2},{nm:'Reforço 15h–21h',q:1},{nm:'Noturno 16h–22h',q:3}]},
+      6:{op:true, tur:[{nm:'Manhã 10h–16h',q:2},{nm:'Reforço 15h–21h',q:1},{nm:'Noturno 16h–22h',q:3}]},
+      0:{op:true, tur:[{nm:'Manhã 10h–16h',q:2},{nm:'Reforço 15h–21h',q:1},{nm:'Noturno 16h–22h',q:3}]}
+    }
+  },
+  {
+    id:'bevenutti', nm:'Bevenutti', tp:'fixo', hr:'18h–00:15', ch:6.25, ds:65, df:70,
+    dias:{
+      1:{op:true, tur:[{nm:'Noturno 18h–00:15',q:3}]},
+      2:{op:true, tur:[{nm:'Noturno 18h–00:15',q:3}]},
+      3:{op:true, tur:[{nm:'Noturno 18h–00:15',q:4}]},
+      4:{op:true, tur:[{nm:'Noturno 18h–00:15',q:4}]},
+      5:{op:true, tur:[{nm:'Noturno 18h–00:15',q:8}]},
+      6:{op:true, tur:[{nm:'Noturno 18h–00:15',q:8}]},
+      0:{op:true, tur:[{nm:'Noturno 18h–00:15',q:6}]}
+    }
+  },
+  {
+    // CENTERMEAT — contrato fixo
+    // Ter–Qui: R$ 45/ent. (dias de semana, ds)
+    // Sex–Sáb: R$ 55/ent. (FDS, df)
+    // Seg e Dom: sem operação
+    id:'centermeat', nm:'Centermeat', tp:'fixo', hr:'10h–20h', ch:10, ds:45, df:55,
+    dias:{
+      1:{op:false},                                          // SEG — não opera
+      2:{op:true, tur:[{nm:'Turno 10h–20h',q:1}]},          // TER — R$45
+      3:{op:true, tur:[{nm:'Turno 10h–20h',q:1}]},          // QUA — R$45
+      4:{op:true, tur:[{nm:'Turno 10h–20h',q:1}]},          // QUI — R$45
+      5:{op:true, tur:[{nm:'Turno 10h–20h',q:1}]},          // SEX — R$55
+      6:{op:true, tur:[{nm:'Turno 10h–20h',q:1}]},          // SÁB — R$55
+      0:{op:false}                                           // DOM — não opera
+    }
+  }
+];
+
+let ST = {cid:'', ocs:[], admOn:false, admTier:null, status:'draft'};
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+// INICIALIZAÇÃO
+// Ordem obrigatória:
+//   1. buildWeeks() — popula o array WEEKS e o <select>
+//   2. renderCliSelector() — monta os cards de cliente
+//   3. renderClientGrid() — monta o banco de clientes (aba Clientes)
+//   4. renderPlansTable() — monta a tabela de planos (aba Planos)
+//   5. autoSelectLastMonday() — pré-seleciona a última segunda passada
+// ══════════════════════════════════════════════════════════════
+window.onload = () => {
+  buildWeeks();
+  renderCliSelector();
+  renderClientGrid();
+  renderPlansTable();
+  autoSelectLastMonday(); // regra: sempre começar na última segunda-feira
+};
+
+// ══════════════════════════════════════════════════════════════
+// SELEÇÃO AUTOMÁTICA DA ÚLTIMA SEGUNDA-FEIRA
+//
+// REGRA DE NEGÓCIO:
+//   Ao abrir o app, o período padrão é SEMPRE:
+//     - Início: última segunda-feira que passou (ou hoje, se hoje for segunda)
+//     - Fim:    domingo imediatamente seguinte (6 dias depois)
+//
+//   Exemplo: se hoje é quinta 02/04/2026
+//     → dtI = 30/03/2026 (segunda passada)
+//     → dtF = 05/04/2026 (domingo seguinte)
+//
+//   Isso representa a semana de fechamento em andamento ou recém-encerrada.
+//   O usuário pode navegar para outras semanas via ‹ › ou pelo select.
+//
+// FONTE ÚNICA DA VERDADE:
+//   dtI e dtF só devem ser alterados via applyWeek().
+//   Nunca setar document.getElementById('dtI').value diretamente fora daqui.
+// ══════════════════════════════════════════════════════════════
+function autoSelectLastMonday() {
+  const hoje = new Date();
+  hoje.setHours(12, 0, 0, 0); // normalizar hora para evitar bugs de fuso
+
+  // Calcular quantos dias retroagir até a última segunda
+  // getDay(): 0=Dom, 1=Seg, 2=Ter, 3=Qua, 4=Qui, 5=Sex, 6=Sáb
+  const dow = hoje.getDay();
+  const diasAtrasSegunda = dow === 0 ? 6 : dow - 1;
+  // Se hoje for segunda (dow=1), diasAtrasSegunda=0 → usa hoje mesmo
+
+  const ultimaSegunda = new Date(hoje);
+  ultimaSegunda.setDate(hoje.getDate() - diasAtrasSegunda);
+  const isoSeg = iso(ultimaSegunda);
+
+  // Buscar o índice dessa segunda no array WEEKS
+  // Se não encontrar exato, pegar o mais próximo anterior
+  let idx = WEEKS.findIndex(w => w.i === isoSeg);
+  if (idx < 0) {
+    // Fallback: semana cujo início é <= ultimaSegunda mais próximo
+    idx = WEEKS.reduce((best, w, i) => {
+      return w.i <= isoSeg ? i : best;
+    }, 0);
+  }
+
+  WI = idx;
+  document.getElementById('weeksBar').value = WI;
+  applyWeek(WI); // aplica dtI e dtF e atualiza os botões ‹ ›
+}
+
+// ══════════════════════════════════════════════════════════════
+// ARRAY DE SEMANAS
+//
+// WEEKS: array de objetos { i: 'YYYY-MM-DD', f: 'YYYY-MM-DD', lbl: string }
+//   i = segunda-feira (início)
+//   f = domingo (fim = i + 6 dias)
+//   lbl = label exibido no <select>
+//
+// WI: índice (inteiro) da semana atualmente selecionada em WEEKS[]
+//   Toda navegação altera WI e chama applyWeek(WI)
+//
+// COBERTURA: 05/01/2026 (primeira segunda de 2026) até 28/12/2026
+// ══════════════════════════════════════════════════════════════
+let WEEKS = [];
+let WI = 0;
+
+function buildWeeks() {
+  const sel = document.getElementById('weeksBar');
+  sel.innerHTML = '';
+  WEEKS = [];
+
+  const fimAno = new Date('2026-12-28T12:00:00');
+  let d = new Date('2026-01-05T12:00:00'); // primeira segunda de 2026
+
+  while (d <= fimAno) {
+    const s = new Date(d);
+    const e = new Date(d);
+    e.setDate(d.getDate() + 6); // domingo = segunda + 6
+
+    const is = iso(s); // 'YYYY-MM-DD' início (segunda)
+    const ie = iso(e); // 'YYYY-MM-DD' fim (domingo)
+
+    // Label amigável: "05 jan – 11 jan. de 2026"
+    const lbl = s.toLocaleDateString('pt-BR', {day:'2-digit', month:'short'})
+              + ' – '
+              + e.toLocaleDateString('pt-BR', {day:'2-digit', month:'short', year:'numeric'});
+
+    WEEKS.push({ i: is, f: ie, lbl });
+
+    const opt = document.createElement('option');
+    opt.value = WEEKS.length - 1; // índice numérico como value
+    opt.textContent = lbl;
+    sel.appendChild(opt);
+
+    d.setDate(d.getDate() + 7); // avança 7 dias
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// NAVEGAÇÃO DE SEMANAS
+//
+// onWeekSelect(): chamado quando usuário muda o <select>
+// navWeek(dir): chamado pelos botões ‹ (dir=-1) e › (dir=+1)
+// applyWeek(idx): FONTE ÚNICA — aplica a semana no dtI/dtF
+// updNavBtns(): desabilita ‹ se WI=0, desabilita › se WI=último
+// hlWeek(isoStr): seleciona a semana pelo ISO da segunda (usado internamente)
+// ══════════════════════════════════════════════════════════════
+function onWeekSelect() {
+  // Usuário escolheu uma semana no dropdown
+  WI = parseInt(document.getElementById('weeksBar').value);
+  applyWeek(WI);
+}
+
+function navWeek(dir) {
+  // dir = -1 (semana anterior) ou +1 (próxima semana)
+  const next = WI + dir;
+  if (next < 0 || next >= WEEKS.length) return; // limites do array
+  WI = next;
+  document.getElementById('weeksBar').value = WI;
+  applyWeek(WI);
+  updNavBtns();
+}
+
+function applyWeek(idx) {
+  // FONTE ÚNICA DA VERDADE para dtI e dtF
+  // Sempre chamar esta função — nunca setar dtI/dtF diretamente
+  if (!WEEKS[idx]) return;
+  const w = WEEKS[idx];
+  document.getElementById('dtI').value = w.i; // segunda-feira
+  document.getElementById('dtF').value = w.f; // domingo
+  updNavBtns();
+  if (ST.cid) calc(); // recalcular apenas se cliente já selecionado
+}
+
+function updNavBtns() {
+  // Botão ‹ desabilitado na primeira semana
+  document.getElementById('wPrev').disabled = (WI <= 0);
+  // Botão › desabilitado na última semana
+  document.getElementById('wNext').disabled = (WI >= WEEKS.length - 1);
+}
+
+function hlWeek(isoStr) {
+  // Seleciona a semana no <select> dado o ISO da segunda-feira
+  const idx = WEEKS.findIndex(w => w.i === isoStr);
+  if (idx >= 0) {
+    WI = idx;
+    document.getElementById('weeksBar').value = idx;
+    updNavBtns();
+  }
+}
+
+// ══════════════════════════════════════════
+// SELETOR DE CLIENTE (cards)
+// ══════════════════════════════════════════
+function renderCliSelector() {
+  const sel = document.getElementById('cliSelector');
+  sel.innerHTML = CLI.map(c => `
+    <div class="cli-card ${ST.cid===c.id?'on':''}" onclick="selCliente('${c.id}')" id="cliCard_${c.id}">
+      <div class="cli-name">${c.nm}</div>
+      <div class="cli-meta">
+        ⏰ ${c.hr||'—'} &nbsp;·&nbsp; ${c.tp==='flexivel'?'Flexível':'Fixo por turno'}<br>
+        R$ ${c.ds}/ent. sem &nbsp;·&nbsp; R$ ${c.df}/ent. FDS+Fer
+      </div>
+      <span class="cli-type ${c.tp==='fixo'?'ct-fixo':'ct-flex'}">${c.tp==='fixo'?'Fixo':'Flexível'}</span>
+    </div>`).join('');
+}
+
+function selCliente(id) {
+  ST.cid = id; ST.ocs = []; ST.admOn = false; ST.admTier = null;
+  document.getElementById('togAdm').classList.remove('on');
+  document.getElementById('admArea').style.display = 'none';
+  hideEl('tl_adm');  // garantir que soma não aparece no totalizador
+  document.getElementById('btnEnv').style.display = 'none';
+  // Zerar campos de entrega ao trocar cliente
+  const nEnt = document.getElementById('nEnt'); if (nEnt) nEnt.value = '';
+  const nTax = document.getElementById('nTax'); if (nTax) nTax.value = '';
+  const nObs = document.getElementById('nObs'); if (nObs) nObs.value = '';
+  setStatus('draft');
+  // highlight card
+  document.querySelectorAll('.cli-card').forEach(c => c.classList.remove('on'));
+  document.getElementById('cliCard_' + id)?.classList.add('on');
+  const c = getC(id);
+  // mostrar seções
+  showEl('secPeriod');
+  showEl('secEntregas');
+  showEl('secAdm');
+  showEl('secObs');
+  showEl('actBar');
+  showEl('totBox');
+  if (c.tp !== 'flexivel') { showEl('secOcorr'); showEl('secContrato'); }
+  else { hideEl('secOcorr'); hideEl('secContrato'); }
+  renderContrato(c);
+  renderRuleBox(c);
+  renderOcs();
+  calc();
+}
+
+function onDCh() {
+  // Chamado quando o usuário edita dtI ou dtF manualmente nos campos de data.
+  // Se o dtI digitado coincidir com uma segunda-feira conhecida em WEEKS[],
+  // sincroniza o <select> automaticamente para manter consistência visual.
+  const dtI = document.getElementById('dtI').value;
+  const match = WEEKS.findIndex(w => w.i === dtI);
+  if (match >= 0 && match !== WI) {
+    WI = match;
+    document.getElementById('weeksBar').value = WI;
+    updNavBtns();
+  }
+  if (ST.cid) calc(); // recalcular totais se cliente está selecionado
+}
+
+// ══════════════════════════════════════════
+// CONTRATO
+// ══════════════════════════════════════════
+function renderContrato(c) {
+  document.getElementById('cTipo').textContent = c.tp === 'flexivel' ? '⚡ Flexível' : '📅 Turnos Fixos';
+  const body = document.getElementById('contratoBody');
+  const diariaBlock = `
+    <div class="grid g2" style="margin-bottom:14px">
+      <div class="field">
+        <label>Diária Seg–Qui R$/ent.</label>
+        <input type="number" value="${c.ds}" oninput="updDiaria('s','${c.id}',this.value)">
+      </div>
+      <div class="field">
+        <label>Diária Sex–Dom+Feriado R$/ent.</label>
+        <input type="number" value="${c.df}" oninput="updDiaria('f','${c.id}',this.value)">
+      </div>
+    </div>`;
+
+  if (c.tp === 'flexivel') {
+    body.innerHTML = diariaBlock + `
+      <div class="flex-info">⚡ <b>Operação Flexível</b> — ${c.flexInfo}.<br>
+        Informe os totais abaixo na seção de entregas.</div>
+      <div class="grid g2">
+        <div class="field"><label>Entregadores dias semana (Seg–Qui)</label><input type="number" id="fxS" placeholder="0" oninput="calc()"></div>
+        <div class="field"><label>Entregadores dias FDS/Feriado</label><input type="number" id="fxF" placeholder="0" oninput="calc()"></div>
+      </div>`;
+    return;
+  }
+
+  let html = diariaBlock + '<div class="day-list">';
+  [1,2,3,4,5,6,0].forEach(dow => {
+    const d = c.dias[dow];
+    const isFds = dow === 0 || dow === 5 || dow === 6;
+    const di = isFds ? c.df : c.ds;
+    if (!d || !d.op) {
+      html += `<div class="day-row inactive"><div class="day-row-head"><span class="day-row-name">${DN[dow]} <span class="day-badge b-${isFds?'fds':'sem'}">${isFds?'FDS':'SEM'}</span></span><span class="inactive-label">Sem operação</span></div></div>`;
+      return;
+    }
+    const qtot = d.tur.reduce((a,t) => a + t.q, 0);
+    let lines = d.tur.map((t,ti) => `
+      <div class="shift-line">
+        <span class="shift-nm">${t.nm}</span>
+        <div class="shift-right">
+          <input type="number" class="qty-input" value="${t.q}" min="0" max="30"
+            oninput="updTQ('${c.id}',${dow},${ti},this.value)">
+          <span class="shift-rate">× R$ ${di}</span>
+        </div>
+      </div>`).join('');
+    html += `
+      <div class="day-row">
+        <div class="day-row-head">
+          <span class="day-row-name">${DN[dow]} <span class="day-badge b-${isFds?'fds':'sem'}">${isFds?'FDS':'SEM'}</span></span>
+          <span class="day-row-total" id="dt_${c.id}_${dow}">= ${fmt(qtot*di)}</span>
+        </div>
+        <div class="day-row-body">${lines}</div>
+      </div>`;
+  });
+  html += '</div>';
+  body.innerHTML = html;
+}
+
+function updDiaria(tipo, cid, val) {
+  const c = getC(cid); if (!c) return;
+  if (tipo === 's') c.ds = parseFloat(val) || 0; else c.df = parseFloat(val) || 0;
+  renderContrato(c); renderRuleBox(c); calc();
+}
+function updTQ(cid, dow, ti, val) {
+  const c = getC(cid); if (!c || !c.dias[dow]) return;
+  c.dias[dow].tur[ti].q = parseInt(val) || 0;
+  const isFds = dow === 0 || dow === 5 || dow === 6;
+  const di = isFds ? c.df : c.ds;
+  const qt = c.dias[dow].tur.reduce((a,t) => a + t.q, 0);
+  const el = document.getElementById(`dt_${cid}_${dow}`);
+  if (el) el.textContent = '= ' + fmt(qt * di);
+  calc();
+}
+
+// ══════════════════════════════════════════
+// RULE BOX (info desconto por atraso)
+// ══════════════════════════════════════════
+function renderRuleBox(c) {
+  if (c.tp === 'flexivel') return;
+  const h = c.ch || 6;
+  document.getElementById('ruleBox').innerHTML = `
+    Carga horária: <b>${h}h/turno</b> (${c.hr || '—'})<br>
+    Valor/hora sem: <b>R$ ${c.ds} ÷ ${h}h = R$ ${(c.ds/h).toFixed(2)}/h</b>&nbsp;&nbsp;
+    FDS: <b>R$ ${c.df} ÷ ${h}h = R$ ${(c.df/h).toFixed(2)}/h</b><br>
+    Desconto por atraso = <b>valor/hora × tempo de atraso</b>`;
+}
+
+// ══════════════════════════════════════════
+// CÁLCULO PRINCIPAL
+// ══════════════════════════════════════════
+function calc() {
+  // ══════════════════════════════════════════════════════════════
+  // CÁLCULO PRINCIPAL DO FECHAMENTO
+  //
+  // FÓRMULA:
+  //   total = diárias_semana + diárias_fds - descontos + taxa_entrega + taxa_adm
+  //
+  // VARIÁVEIS:
+  //   totD = soma total das diárias (semana + FDS)
+  //   cS   = contagem de dias de semana (seg–qui) no período
+  //   cF   = contagem de dias FDS/feriado (sex–dom + feriados) no período
+  //   vS   = valor monetário das diárias de semana
+  //   vF   = valor monetário das diárias de FDS/feriado
+  //
+  // DIÁRIA:
+  //   - Seg a Qui → usa c.ds (diária semana)
+  //   - Sex, Sáb, Dom e feriados nacionais → usa c.df (diária FDS)
+  //
+  // DESCONTOS:
+  //   Calculados em ST.ocs[] (faltas e atrasos registrados)
+  //   Falta total = 1 diária | Parcial = 0.5 diária
+  //   Atraso = (diária / carga_horária) × horas_de_atraso
+  //
+  // TAXA ADMINISTRATIVA:
+  //   Só soma se ST.admOn === true E ST.admTier selecionado E não é "Personalizado"
+  // ══════════════════════════════════════════════════════════════
+  const c = getC(ST.cid); if (!c) return;
+  const dtI = document.getElementById('dtI').value;
+  const dtF = document.getElementById('dtF').value;
+  if (!dtI || !dtF) return;
+
+  let totD = 0, cS = 0, cF = 0, vS = 0, vF = 0;
+
+  if (c.tp === 'flexivel') {
+    const qS = parseInt(document.getElementById('fxS')?.value) || 0;
+    const qF = parseInt(document.getElementById('fxF')?.value) || 0;
+    iterD(dtI, dtF, (s, dw) => { (dw===0||dw===5||dw===6||FER.includes(s)) ? cF++ : cS++; });
+    vS = qS * c.ds; vF = qF * c.df; totD = vS + vF;
+  } else {
+    iterD(dtI, dtF, (s, dw) => {
+      const d = c.dias[dw]; if (!d || !d.op) return;
+      const isFds = dw===0 || dw===5 || dw===6 || FER.includes(s);
+      const di = isFds ? c.df : c.ds;
+      const qt = d.tur.reduce((a,t) => a + t.q, 0);
+      const sub = qt * di; totD += sub;
+      if (isFds) { cF++; vF += sub; } else { cS++; vS += sub; }
+    });
+  }
+
+  const taxE = parseFloat(document.getElementById('nTax').value) || 0;
+  const totDesc = ST.ocs.reduce((a,o) => a + o.desc, 0);
+  const admVal = (ST.admOn === true) && ST.admTier && !ST.admTier.custom ? ST.admTier.price : 0;
+  const total = totD + taxE - totDesc + admVal;
+
+  // atualizar totalizador
+  const c2 = getC(ST.cid);
+  setText('tNm', c2.nm);
+  setText('tPr', `${fbr(dtI)} → ${fbr(dtF)}`);
+  setText('tDS', `${cS} dia${cS!==1?'s':''}`);
+  setText('tDF', `${cF} dia${cF!==1?'s':''}`);
+  setText('tVS', fmt(vS)); setText('tVF', fmt(vF));
+  setText('tSD', fmt(totD)); setText('tTE', fmt(taxE));
+  if (vS > 0) showEl('tl_vds'); else hideEl('tl_vds');
+  if (vF > 0) showEl('tl_vdf'); else hideEl('tl_vdf');
+  if (totDesc > 0) { showEl('tl_disc'); setText('tDsc', '− ' + fmt(totDesc)); } else hideEl('tl_disc');
+  if (admVal > 0) { showEl('tl_adm'); setText('tAd', fmt(admVal)); } else hideEl('tl_adm');
+
+  const el = document.getElementById('tTot');
+  setText('tTot', fmt(total));
+  el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'pop .25s ease';
+
+  let det = '';
+  if (cS > 0) det += `${cS}d semana — ${fmt(vS)}<br>`;
+  if (cF > 0) det += `${cF}d FDS/Fer — ${fmt(vF)}<br>`;
+  if (taxE > 0) det += `Taxa entrega: ${fmt(taxE)}<br>`;
+  if (totDesc > 0) det += `<span style="color:var(--red)">Descontos: − ${fmt(totDesc)}</span><br>`;
+  if (admVal > 0) det += `Taxa adm.: ${fmt(admVal)}<br>`;
+  setText('tDet', det || '<span style="color:var(--hint)">Preencha os dados acima</span>');
+}
+
+function iterD(i, f, cb) {
+  // Itera dia a dia entre i e f (inclusive), chamando cb(isoDate, dayOfWeek)
+  // Usa T12:00:00 para evitar bugs de horário de verão / fuso UTC
+  // dayOfWeek: 0=Dom, 1=Seg, 2=Ter, 3=Qua, 4=Qui, 5=Sex, 6=Sáb
+  const d = new Date(i + 'T12:00:00'), e = new Date(f + 'T12:00:00');
+  while (d <= e) { cb(iso(d), d.getDay()); d.setDate(d.getDate() + 1); }
+}
+
+// ══════════════════════════════════════════
+// FALTAS
+// ══════════════════════════════════════════
+function confFalta() {
+  const dt = document.getElementById('fDt').value;
+  const nm = document.getElementById('fNm').value.trim();
+  if (!dt || !nm) { toast2('⚠️', 'Preencha data e nome.'); return; }
+  const c = getC(ST.cid);
+  const dw = new Date(dt + 'T12:00:00').getDay();
+  const isFds = dw===0 || dw===5 || dw===6 || FER.includes(dt);
+  const di = isFds ? c.df : c.ds;
+  const tp = document.getElementById('fTp').value;
+  const desc = tp === 'parcial' ? di * .5 : di;
+  const tn = document.getElementById('fTn');
+  ST.ocs.push({tp:'falta', dt, nm, det:tn.options[tn.selectedIndex].text, desc, isFds, tlb: tp==='parcial'?'Parcial':'Falta', ob:document.getElementById('fOb').value});
+  renderOcs(); closeOv('ovFalta'); calc();
+  toast2('✅', `Falta de ${nm} — Desconto: ${fmt(desc)}`);
+  document.getElementById('fNm').value = ''; document.getElementById('fOb').value = '';
+}
+
+// ══════════════════════════════════════════
+// ATRASOS
+// ══════════════════════════════════════════
+function calcAt() {
+  const c = getC(ST.cid); if (!c) return;
+  const h = parseFloat(document.getElementById('aH').value) || 0;
+  const m = parseFloat(document.getElementById('aM').value) || 0;
+  const dt = document.getElementById('aDt').value;
+  if (!dt) return;
+  const totalH = h + (m / 60);
+  const box = document.getElementById('atBox');
+  if (totalH <= 0) { box.style.display = 'none'; return; }
+  const dw = new Date(dt + 'T12:00:00').getDay();
+  const isFds = dw===0 || dw===5 || dw===6 || FER.includes(dt);
+  const di = isFds ? c.df : c.ds;
+  const ch = c.ch || 6;
+  const vh = di / ch;
+  const desc = vh * totalH;
+  box.style.display = ''; box._d = desc; box._fds = isFds;
+  setText('atDet', `Diária: R$ ${di} ÷ ${ch}h = R$ ${vh.toFixed(2)}/h &nbsp;|&nbsp; Atraso: ${h}h${m>0?' '+m+'min':''} = ${totalH.toFixed(2)}h`);
+  setText('atTot', `Desconto = R$ ${vh.toFixed(2)} × ${totalH.toFixed(2)}h = − ${fmt(desc)}`);
+}
+function confAtraso() {
+  const dt = document.getElementById('aDt').value;
+  const nm = document.getElementById('aNm').value.trim();
+  if (!dt || !nm) { toast2('⚠️', 'Preencha data e nome.'); return; }
+  const h = parseFloat(document.getElementById('aH').value) || 0;
+  const m = parseFloat(document.getElementById('aM').value) || 0;
+  const totalH = h + (m / 60);
+  if (totalH <= 0) { toast2('⚠️', 'Informe o tempo de atraso.'); return; }
+  const box = document.getElementById('atBox');
+  const desc = box._d || 0; const isFds = box._fds || false;
+  ST.ocs.push({tp:'atraso', dt, nm, det:`${h}h${m>0?' '+m+'min':''}`, desc, isFds, tlb:'Atraso', ob:document.getElementById('aOb').value});
+  renderOcs(); closeOv('ovAtraso'); calc();
+  toast2('⏱', `Atraso de ${nm} — Desconto: ${fmt(desc)}`);
+  document.getElementById('aNm').value = ''; document.getElementById('aH').value = ''; document.getElementById('aM').value = '';
+  document.getElementById('atBox').style.display = 'none';
+}
+
+function renderOcs() {
+  const body = document.getElementById('ocBody');
+  if (!ST.ocs.length) {
+    body.innerHTML = '<tr><td colspan="6" class="oc-empty">Nenhuma ocorrência registrada</td></tr>';
+    document.getElementById('discBox').style.display = 'none'; return;
+  }
+  let tot = 0;
+  body.innerHTML = ST.ocs.map((o,i) => {
+    tot += o.desc;
+    return `<tr>
+      <td>${fbr(o.dt)} <span class="badge ${o.isFds?'bfds':'bsem'}">${o.isFds?'FDS':'SEM'}</span></td>
+      <td>${o.nm}</td>
+      <td><span class="badge ${o.tp==='atraso'?'batraso':o.tlb==='Parcial'?'bparcial':'bfalta'}">${o.tlb}</span></td>
+      <td class="hide-mob" style="color:var(--muted)">${o.det}</td>
+      <td style="font-family:var(--mono);color:var(--red);font-weight:700">− ${fmt(o.desc)}</td>
+      <td><button class="btn btn-red" onclick="remOc(${i})">✕</button></td>
+    </tr>`;
+  }).join('');
+  showEl('discBox');
+  setText('discVal', '− ' + fmt(tot));
+}
+function remOc(i) { ST.ocs.splice(i,1); renderOcs(); calc(); }
+
+// ══════════════════════════════════════════
+// TAXA ADMINISTRATIVA
+// ══════════════════════════════════════════
+function togAdmin() {
+  ST.admOn = !ST.admOn;
+  const t = document.getElementById('togAdm');
+  if (ST.admOn) { t.classList.add('on'); document.getElementById('admArea').style.display = ''; renderTiers(); }
+  else { t.classList.remove('on'); document.getElementById('admArea').style.display = 'none'; ST.admTier = null; calc(); }
+}
+function renderTiers() {
+  setText('tiersGrid', PLANS.map(p => `
+    <div class="tier ${ST.admTier?.id===p.id?'on':''}" onclick="selTier(${p.id})">
+      <div class="tier-lbl">${p.lbl}</div>
+      <div class="tier-price">${p.custom ? '—' : 'R$ ' + p.price.toLocaleString('pt-BR')}</div>
+      <div class="tier-nm">${p.nm}</div>
+    </div>`).join(''));
+}
+function selTier(id) { ST.admTier = PLANS.find(p => p.id === id) || null; renderTiers(); calc(); }
+function sugTier() {
+  const v = parseInt(document.getElementById('nMes').value) || 0;
+  ST.admTier = PLANS.find(p => v <= p.max) || PLANS[PLANS.length-1];
+  renderTiers(); calc();
+}
+
+// ══════════════════════════════════════════
+// BANCO DE CLIENTES
+// ══════════════════════════════════════════
+function renderClientGrid() {
+  const g = document.getElementById('clientGrid');
+  g.innerHTML = CLI.map(c => {
+    const dop = c.dias ? Object.values(c.dias).filter(d => d.op).length : '—';
+    const etot = c.dias ? Object.values(c.dias).filter(d => d.op && d.tur).reduce((a,d) => a + d.tur.reduce((b,t) => b + t.q, 0), 0) : '—';
+    return `<div class="cc">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="cc-nm">${c.nm}</div>
+        <span class="cli-type ${c.tp==='fixo'?'ct-fixo':'ct-flex'}">${c.tp==='fixo'?'Fixo':'Flexível'}</span>
+      </div>
+      <div class="cc-info">
+        ⏰ ${c.hr||'—'} &nbsp;·&nbsp; Carga: ${c.ch||'—'}h<br>
+        Diária sem: <b>R$ ${c.ds}</b> &nbsp;·&nbsp; FDS: <b>R$ ${c.df}</b>
+      </div>
+      ${c.tp==='fixo'?`<div class="cc-stats">
+        <div class="cc-stat"><div class="v">${dop}</div><div class="l">dias/sem</div></div>
+        <div class="cc-stat"><div class="v">${etot}</div><div class="l">ent./dia</div></div>
+      </div>`:''}
+      <div class="cc-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editClient('${c.id}')">✏️ Editar</button>
+        <button class="btn btn-ghost btn-sm" onclick="irFechamento('${c.id}')">📊 Fechamento</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('cCount').textContent = CLI.length;
+  renderCliSelector();
+}
+
+function irFechamento(id) {
+  goTab('fechamento', document.querySelector('.tab'));
+  selCliente(id);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function editClient(id) {
+  const c = getC(id);
+  document.getElementById('edNm').value = c.nm;
+  document.getElementById('edTp').value = c.tp;
+  document.getElementById('edHr').value = c.hr || '';
+  document.getElementById('edCH').value = c.ch || 6;
+  document.getElementById('edDS').value = c.ds;
+  document.getElementById('edDF').value = c.df;
+  document.getElementById('edTitle').textContent = 'Editando: ' + c.nm;
+  const ed = document.getElementById('cliEditor');
+  ed._id = id; ed.classList.add('open');
+  renderEdFields();
+  ed.scrollIntoView({behavior:'smooth'});
+}
+function closeEditor() { document.getElementById('cliEditor').classList.remove('open'); }
+function saveClient() {
+  const ed = document.getElementById('cliEditor');
+  const c = getC(ed._id); if (!c) return;
+  c.nm = document.getElementById('edNm').value.trim();
+  c.tp = document.getElementById('edTp').value;
+  c.hr = document.getElementById('edHr').value;
+  c.ch = parseFloat(document.getElementById('edCH').value) || 6;
+  c.ds = parseFloat(document.getElementById('edDS').value) || 0;
+  c.df = parseFloat(document.getElementById('edDF').value) || 0;
+  renderClientGrid(); closeEditor();
+  toast2('✅', `"${c.nm}" salvo com sucesso.`);
+}
+function renderEdFields() {
+  const tp = document.getElementById('edTp').value;
+  const id = document.getElementById('cliEditor')._id;
+  const c = id ? getC(id) : null;
+  const body = document.getElementById('edBody');
+  if (tp === 'flexivel') {
+    body.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:10px 0">Operação flexível — sem turnos fixos cadastrados.</div>'; return;
+  }
+  if (!c || !c.dias) { body.innerHTML = ''; return; }
+  const ds = parseFloat(document.getElementById('edDS').value) || 65;
+  const df = parseFloat(document.getElementById('edDF').value) || 70;
+  let html = '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px;margin-top:14px">Dias de Operação</div><div class="day-list">';
+  [1,2,3,4,5,6,0].forEach(dow => {
+    const d = c.dias[dow] || {op:false, tur:[]};
+    const isFds = dow===0 || dow===5 || dow===6;
+    const di = isFds ? df : ds;
+    let lines = (d.tur||[]).map((t,ti) => `
+      <div class="shift-line"><span class="shift-nm">${t.nm}</span>
+        <div class="shift-right">
+          <input type="number" class="qty-input" value="${t.q}" min="0" max="30"
+            oninput="updTQed('${id}',${dow},${ti},this.value)">
+          <span class="shift-rate">× R$ ${di}</span>
+        </div>
+      </div>`).join('');
+    html += `<div class="day-row ${d.op?'':'inactive'}">
+      <div class="day-row-head">
+        <span class="day-row-name">${DN[dow]} <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);cursor:pointer;font-weight:500;text-transform:none;letter-spacing:0">
+          <input type="checkbox" ${d.op?'checked':''} onchange="getC('${id}').dias[${dow}].op=this.checked;renderEdFields()" style="accent-color:var(--brand)"> Ativo
+        </label></span>
+      </div>
+      ${d.op ? `<div class="day-row-body">${lines||'<div style="font-size:11px;color:var(--hint);padding:8px 0">Nenhum turno</div>'}</div>` : ''}
+    </div>`;
+  });
+  html += '</div>';
+  body.innerHTML = html;
+}
+function updTQed(cid, dow, ti, val) {
+  const c = getC(cid); if (!c || !c.dias[dow] || !c.dias[dow].tur) return;
+  c.dias[dow].tur[ti].q = parseInt(val) || 0;
+}
+function createClient() {
+  const nm = document.getElementById('ncNm').value.trim();
+  if (!nm) { toast2('⚠️', 'Informe o nome.'); return; }
+  const tp = document.getElementById('ncTp').value;
+  const id = 'c' + Date.now();
+  const nc = {id, nm, tp, hr:'', ch:6, ds:65, df:70};
+  if (tp === 'fixo') { nc.dias = {}; [0,1,2,3,4,5,6].forEach(d => { nc.dias[d] = {op:false, tur:[]}; }); }
+  else nc.flexInfo = 'Quantidade variável por dia';
+  CLI.push(nc); closeOv('ovNovoCliente'); renderClientGrid(); editClient(id);
+  toast2('✅', `"${nm}" criado!`);
+  document.getElementById('ncNm').value = '';
+}
+
+// ══════════════════════════════════════════
+// PLANOS
+// ══════════════════════════════════════════
+function renderPlansTable() {
+  const t = document.getElementById('plansTable');
+  t.innerHTML = `<thead><tr>
+    <th>#</th><th>Descrição da faixa</th><th>Preço / mês</th><th>Nome</th><th></th>
+  </tr></thead><tbody>${PLANS.map((p,i) => `<tr>
+    <td style="color:var(--hint)">${i+1}</td>
+    <td><input value="${p.lbl}" oninput="PLANS[${i}].lbl=this.value"></td>
+    <td style="width:130px"><div style="display:flex;align-items:center;gap:5px">
+      <span style="color:var(--muted);font-size:11px">R$</span>
+      <input type="number" value="${p.price}" oninput="PLANS[${i}].price=parseFloat(this.value)||0"
+        style="font-family:var(--mono);font-weight:700;color:var(--brand)">
+    </div></td>
+    <td style="width:120px"><input value="${p.nm}" oninput="PLANS[${i}].nm=this.value"></td>
+    <td>${PLANS.length>1?`<button class="btn btn-red" onclick="remPlan(${i})">✕</button>`:''}</td>
+  </tr>`).join('')}</tbody>`;
+}
+function addPlan() { PLANS.push({id:Date.now(), lbl:'Nova faixa', max:9999, price:0, nm:'Novo'}); renderPlansTable(); }
+function remPlan(i) { if (PLANS.length<=1) return; PLANS.splice(i,1); renderPlansTable(); }
+
+// ══════════════════════════════════════════
+// AÇÕES FINAIS
+// ══════════════════════════════════════════
+function gerarFechamento() {
+  setStatus('gen'); showEl('btnEnv');
+  toast2('✅', `Fechamento gerado: ${document.getElementById('tTot').textContent}`);
+}
+
+function abrirRelatorio() {
+  const c = getC(ST.cid); if (!c) return;
+  const dtI = document.getElementById('dtI').value;
+  const dtF = document.getElementById('dtF').value;
+  // PIX fixo: lê o textContent do elemento (não é input, é div somente-leitura)
+  const pix = document.getElementById('nPix')?.textContent?.trim() || '54.707.097/0001-04';
+
+  // ══════════════════════════════════════════════════════════════
+  // DATA DE VENCIMENTO DO PAGAMENTO
+  //
+  // REGRA: sempre a segunda-feira da SEMANA SEGUINTE ao período,
+  // até as 18h00. O fechamento cobre seg→dom, então a segunda
+  // imediatamente após o domingo é a data de pagamento.
+  //
+  // Exemplo: período 30/03→05/04 → vencimento 06/04 até 18h
+  //
+  // Se dtI for uma segunda (dow=1), a próxima segunda = +7 dias.
+  // ══════════════════════════════════════════════════════════════
+  const dI = new Date(dtI + 'T12:00:00');
+  const dow = dI.getDay();
+  // Dias até a próxima segunda: se hoje é segunda, pula pra próxima (+7)
+  const diffProxSeg = dow === 1 ? 7 : (8 - dow) % 7 || 7;
+  const proxSeg = new Date(dI); proxSeg.setDate(dI.getDate() + diffProxSeg);
+  const vencimento = fbr(iso(proxSeg)) + ' até as 18h00';
+
+  // Coletar valores do totalizador
+  const nmCli  = document.getElementById('tNm')?.textContent || c.nm;
+  const periodo = `${fbr(dtI)} → ${fbr(dtF)}`;
+  const vDS    = document.getElementById('tVS')?.textContent || 'R$ 0,00';
+  const vDF    = document.getElementById('tVF')?.textContent || 'R$ 0,00';
+  const vSD    = document.getElementById('tSD')?.textContent || 'R$ 0,00';
+  const vTE    = document.getElementById('tTE')?.textContent || 'R$ 0,00';
+  const vTot   = document.getElementById('tTot')?.textContent || 'R$ 0,00';
+  const cS     = document.getElementById('tDS')?.textContent || '0 dias';
+  const cF     = document.getElementById('tDF')?.textContent || '0 dias';
+  const hasDisc = document.getElementById('tl_disc')?.style.display !== 'none';
+  const vDisc  = document.getElementById('tDsc')?.textContent || '';
+  const hasAdm  = document.getElementById('tl_adm')?.style.display !== 'none';
+  const vAdm   = document.getElementById('tAd')?.textContent || '';
+  const obs    = document.getElementById('nObs')?.value?.trim() || '';
+
+  // Montar texto formatado pro WhatsApp
+  let txt = '';
+  txt += `📊 *FECHAMENTO SEMANAL — OSASCO EXPRESS*
+`;
+  txt += `━━━━━━━━━━━━━━━━━━━━
+`;
+  txt += `🏪 *${nmCli}*
+`;
+  txt += `📅 Período: ${periodo}
+
+`;
+
+  txt += `📋 *Diárias*
+`;
+  if (document.getElementById('tl_vds')?.style.display !== 'none')
+    txt += `  • Semana (${cS}): ${vDS}
+`;
+  if (document.getElementById('tl_vdf')?.style.display !== 'none')
+    txt += `  • FDS/Feriado (${cF}): ${vDF}
+`;
+  txt += `  Subtotal: *${vSD}*
+
+`;
+
+  txt += `📦 *Taxa de Entrega:* ${vTE}
+`;
+
+  if (hasDisc) txt += `⚠️ *Descontos:* ${vDisc}
+`;
+  if (hasAdm)  txt += `💼 *Taxa Adm.:* ${vAdm}
+`;
+
+  txt += `
+━━━━━━━━━━━━━━━━━━━━
+`;
+  txt += `💰 *TOTAL A PAGAR: ${vTot}*
+`;
+  txt += `━━━━━━━━━━━━━━━━━━━━
+
+`;
+  txt += `💳 *PIX:* ${pix}
+`;
+  txt += `⏰ *Pagar até:* ${vencimento}
+`;
+  if (obs) txt += `
+📝 ${obs}
+`;
+  txt += `
+_Osasco Express — Gerado automaticamente_`;
+
+  document.getElementById('relTexto').textContent = txt;
+  document.getElementById('relPixKey').textContent = pix;
+  openOv('ovRelatorio');
+}
+
+let _relTxt = '';
+function copiarTexto() {
+  const txt = document.getElementById('relTexto').textContent;
+  navigator.clipboard.writeText(txt).then(() => toast2('✅', 'Texto copiado!')).catch(() => toast2('⚠️','Copie manualmente'));
+}
+function copiarPix() {
+  // Copia a chave PIX fixa da Osasco Express
+  const pix = document.getElementById('relPixKey').textContent.trim();
+  navigator.clipboard.writeText(pix).then(() => toast2('✅', 'PIX copiado!')).catch(() => {});
+}
+function enviarWhatsApp() {
+  const txt = document.getElementById('relTexto').textContent;
+  const encoded = encodeURIComponent(txt);
+  // Abre o grupo de pagamentos com o texto pré-preenchido
+  const grupoLink = 'https://chat.whatsapp.com/KAdX4KAiVwC1ICrcXr9CQ3';
+  // Primeiro copia o texto, depois abre o grupo
+  navigator.clipboard.writeText(txt).then(() => {
+    toast2('✅', 'Texto copiado! Cole no grupo.');
+    setTimeout(() => window.open(grupoLink, '_blank'), 800);
+  }).catch(() => {
+    window.open(grupoLink, '_blank');
+  });
+}
+
+function enviarFechamento() { setStatus('sent'); toast2('📤', 'Marcado como enviado ao cliente.'); }
+function setStatus(s) {
+  ST.status = s;
+  const lbls = {draft:'Rascunho', gen:'Gerado', sent:'Enviado'};
+  const dots = {draft:'#6B7280', gen:'#1D4ED8', sent:'#027A48'};
+  document.getElementById('sDot').style.background = dots[s];
+  setText('sLbl', lbls[s]);
+}
+
+// ══════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════
+function goTab(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('panel-' + id).classList.add('on');
+  if (el) el.classList.add('on');
+  if (id === 'planos') renderPlansTable();
+}
+
+// ══════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════
+function getC(id) { return CLI.find(c => c.id === id) || null; }
+function iso(d) { return d.toISOString().split('T')[0]; }
+function fd(s) { const [y,m,d] = s.split('-'); return `${d}/${m}`; }
+function fdFull(s) { const [y,m,d] = s.split('-'); return `${d}/${m}`; }
+function fbr(s) { const [y,m,d] = s.split('-'); return `${d}/${m}/${y}`; }
+function fmt(v) { return 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function showEl(id) { const e = document.getElementById(id); if (e) e.style.display = ''; }
+function hideEl(id) { const e = document.getElementById(id); if (e) e.style.display = 'none'; }
+function setText(id, v) { const e = document.getElementById(id); if (e) e.innerHTML = v; }
+function openOv(id) { document.getElementById(id).classList.add('open'); }
+function closeOv(id) { document.getElementById(id).classList.remove('open'); }
+let _tt;
+function toast2(ic, msg) {
+  const t = document.getElementById('toast');
+  setText('toastI', ic); setText('toastM', msg);
+  t.classList.add('show'); clearTimeout(_tt);
+  _tt = setTimeout(() => t.classList.remove('show'), 3800);
+}
+document.querySelectorAll('.ov').forEach(o => o.addEventListener('click', e => {
+  if (e.target === o) o.classList.remove('open');
+}));
+
+// autoWeek removido — hlWeek cuida disso via select
+</script>
+</body>
+</html>
