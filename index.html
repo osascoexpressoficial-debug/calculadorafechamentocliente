@@ -266,6 +266,50 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .pix-row{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .pix-key{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);flex:1}
 .pix-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+
+/* ════ PÁGINA DESCONTOS ════ */
+.disc-hero{background:linear-gradient(135deg,#1a0a0a 0%,#2d0f0f 100%);border-radius:var(--r-lg);padding:24px;margin-bottom:16px;position:relative;overflow:hidden}
+.disc-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(234,29,44,.18) 0%,transparent 70%);pointer-events:none}
+.disc-hero-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(234,29,44,.7);margin-bottom:8px}
+.disc-hero-title{font-size:20px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:6px}
+.disc-hero-sub{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;max-width:480px}
+.disc-total-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+.disc-total-label{font-size:12px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.disc-total-val{font-family:var(--mono);font-size:28px;font-weight:900;color:var(--brand);letter-spacing:-1px}
+
+.msg-card{border-radius:var(--r-lg);padding:18px 20px;margin-bottom:14px;border:1px solid}
+.msg-card.vermelho{background:#fff5f5;border-color:#fca5a5}
+.msg-card.laranja{background:#fff7ed;border-color:#fed7aa}
+.msg-card.verde{background:#f0fdf4;border-color:#86efac}
+.msg-card-icon{font-size:20px;margin-bottom:8px}
+.msg-card-title{font-size:13px;font-weight:800;color:var(--text);margin-bottom:4px}
+.msg-card-body{font-size:12px;color:var(--sub);line-height:1.7}
+
+.ent-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;margin-bottom:10px;box-shadow:var(--sh-sm)}
+.ent-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.ent-name{font-size:15px;font-weight:800;color:var(--text)}
+.ent-total{font-family:var(--mono);font-size:16px;font-weight:800;color:var(--red);background:var(--red-soft);padding:4px 12px;border-radius:20px}
+.ent-oclist{display:flex;flex-direction:column;gap:6px}
+.ent-oc{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border-radius:var(--r-sm);padding:8px 12px;font-size:12px}
+.ent-oc-left{display:flex;align-items:center;gap:8px;flex:1}
+.ent-oc-date{font-weight:700;color:var(--sub);white-space:nowrap}
+.ent-oc-det{color:var(--muted)}
+.ent-oc-val{font-family:var(--mono);font-weight:700;color:var(--red);white-space:nowrap}
+
+.disc-empty{text-align:center;padding:48px 20px;color:var(--muted)}
+.disc-empty-icon{font-size:40px;margin-bottom:12px}
+.disc-empty-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+.disc-empty-sub{font-size:13px;line-height:1.6}
+
+.disc-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.disc-filter-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.filter-chip{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;transition:all .16s}
+.filter-chip:hover{border-color:var(--brand-border);color:var(--brand)}
+.filter-chip.on{border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
+
+.btn-enviar-disc{background:var(--brand);color:#fff;width:100%;padding:13px;border-radius:var(--r-sm);border:none;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;font-family:var(--font);transition:all .18s;box-shadow:0 2px 10px rgba(234,29,44,.25);margin-top:14px}
+.btn-enviar-disc:hover{background:var(--brand-d);transform:translateY(-1px)}
+.btn-enviar-disc:disabled{background:var(--hint);cursor:not-allowed;transform:none;box-shadow:none}
 </style>
 </head>
 <body>
@@ -288,6 +332,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 <!-- TABS -->
 <div class="tabs-bar">
   <button class="tab on" onclick="goTab('fechamento',this)">📊 Fechamento</button>
+  <button class="tab" onclick="goTab('descontos',this)">⚠️ Descontos <span class="tab-badge" id="dCount" style="display:none">0</span></button>
   <button class="tab" onclick="goTab('clientes',this)">🏪 Clientes <span class="tab-badge" id="cCount">3</span></button>
   <button class="tab" onclick="goTab('planos',this)">💼 Planos</button>
 </div>
@@ -473,6 +518,68 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 <!-- ═══════════════════════════════════════
      PANEL CLIENTES
 ═══════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════
+     PANEL DESCONTOS
+     Agrupa todos os descontos (faltas + atrasos) por entregador.
+     Mostra impacto financeiro e mensagem motivacional.
+     Fonte de dados: ST.ocs[] (preenchido no fechamento)
+═══════════════════════════════════════ -->
+<div class="panel" id="panel-descontos">
+
+<!-- HERO: impacto total -->
+<div class="disc-hero" id="discHero">
+  <div class="disc-hero-label">⚠️ Descontos Informados pelo Cliente</div>
+  <div class="disc-hero-title">Atrasos Comunicados</div>
+  <div class="disc-hero-sub">Estes descontos foram <strong style="color:rgba(255,255,255,.85)">informados pelo cliente</strong> com base nos atrasos registrados. A Osasco Express repassa exatamente o que foi comunicado.</div>
+  <div class="disc-total-row">
+    <span class="disc-total-label">Total descontado</span>
+    <span class="disc-total-val" id="discTotalHero">R$ 0,00</span>
+  </div>
+</div>
+
+<!-- FILTRO POR TIPO -->
+<div class="disc-filter">
+  <span class="disc-filter-label">Filtrar:</span>
+  <span class="filter-chip on" onclick="filtrarDisc('todos',this)">Todos</span>
+  <span class="filter-chip" onclick="filtrarDisc('falta',this)">Faltas</span>
+  <span class="filter-chip" onclick="filtrarDisc('atraso',this)">Atrasos</span>
+</div>
+
+<!-- MENSAGENS MOTIVACIONAIS -->
+<div class="msg-card vermelho">
+  <div class="msg-card-icon">📋</div>
+  <div class="msg-card-title">De onde vem este desconto?</div>
+  <div class="msg-card-body">O cliente registrou o atraso e <strong>nos comunicou o valor.</strong> A Osasco Express repassa integralmente o que foi informado — sem acréscimo. O desconto é do cliente, não nosso.</div>
+</div>
+<div class="msg-card laranja">
+  <div class="msg-card-icon">🔄</div>
+  <div class="msg-card-title">O cliente pode pedir sua substituição</div>
+  <div class="msg-card-body">Atrasos repetidos dão ao cliente o direito de solicitar a troca do prestador. <strong>Isso significa perda do slot.</strong> Não é punição nossa — é contrato.</div>
+</div>
+<div class="msg-card verde">
+  <div class="msg-card-icon">💪</div>
+  <div class="msg-card-title">Sem atraso = diária cheia</div>
+  <div class="msg-card-body">Sem ocorrências você recebe 100% da diária, mantém o slot e <strong>constrói histórico para garantir mais dias.</strong> Pontualidade é o melhor investimento.</div>
+</div>
+
+<!-- LISTA POR ENTREGADOR -->
+<div id="discByEntregador"></div>
+
+<!-- ESTADO VAZIO -->
+<div class="disc-empty" id="discEmpty" style="display:none">
+  <div class="disc-empty-icon">✅</div>
+  <div class="disc-empty-title">Nenhuma ocorrência registrada</div>
+  <div class="disc-empty-sub">Registre faltas e atrasos na aba Fechamento<br>após selecionar um cliente.</div>
+</div>
+
+<!-- AÇÕES -->
+<button class="btn-enviar-disc" id="btnEnviarDisc" onclick="abrirRelatorioDescontos()" disabled>
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  Enviar Descontos para o Grupo
+</button>
+
+</div><!-- /panel-descontos -->
+
 <div class="panel" id="panel-clientes">
 <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px">
   <div>
@@ -633,6 +740,23 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       </button>
       <button class="btn-copy" onclick="copiarTexto()">📋 Copiar texto do relatório</button>
       <button class="btn btn-ghost" style="justify-content:center" onclick="closeOv('ovRelatorio')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RELATÓRIO DESCONTOS -->
+<div class="ov" id="ovRelatorioDesc">
+  <div class="rel-modal">
+    <div class="modal-title" style="margin-bottom:4px">⚠️ Descontos Informados pelo Cliente</div>
+    <div class="modal-sub">Valores comunicados pelo cliente · repasse integral</div>
+    <div class="rel-card" id="relDescTexto"></div>
+    <div class="rel-actions">
+      <button class="btn-wpp" onclick="enviarDescWhatsApp()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Abrir Grupo de Pagamentos
+      </button>
+      <button class="btn-copy" onclick="navigator.clipboard.writeText(document.getElementById('relDescTexto').textContent).then(()=>toast2('✅','Copiado!'))">📋 Copiar texto</button>
+      <button class="btn btn-ghost" style="justify-content:center" onclick="closeOv('ovRelatorioDesc')">Fechar</button>
     </div>
   </div>
 </div>
@@ -889,6 +1013,7 @@ function selCliente(id) {
   document.getElementById('togAdm').classList.remove('on');
   document.getElementById('admArea').style.display = 'none';
   hideEl('tl_adm');  // garantir que soma não aparece no totalizador
+  renderDescontos();  // limpar página de descontos ao trocar cliente
   document.getElementById('btnEnv').style.display = 'none';
   // Zerar campos de entrega ao trocar cliente
   const nEnt = document.getElementById('nEnt'); if (nEnt) nEnt.value = '';
@@ -1124,7 +1249,7 @@ function confFalta() {
   const desc = tp === 'parcial' ? di * .5 : di;
   const tn = document.getElementById('fTn');
   ST.ocs.push({tp:'falta', dt, nm, det:tn.options[tn.selectedIndex].text, desc, isFds, tlb: tp==='parcial'?'Parcial':'Falta', ob:document.getElementById('fOb').value});
-  renderOcs(); closeOv('ovFalta'); calc();
+  renderOcs(); renderDescontos(); closeOv('ovFalta'); calc();
   toast2('✅', `Falta de ${nm} — Desconto: ${fmt(desc)}`);
   document.getElementById('fNm').value = ''; document.getElementById('fOb').value = '';
 }
@@ -1162,7 +1287,7 @@ function confAtraso() {
   const box = document.getElementById('atBox');
   const desc = box._d || 0; const isFds = box._fds || false;
   ST.ocs.push({tp:'atraso', dt, nm, det:`${h}h${m>0?' '+m+'min':''}`, desc, isFds, tlb:'Atraso', ob:document.getElementById('aOb').value});
-  renderOcs(); closeOv('ovAtraso'); calc();
+  renderOcs(); renderDescontos(); closeOv('ovAtraso'); calc();
   toast2('⏱', `Atraso de ${nm} — Desconto: ${fmt(desc)}`);
   document.getElementById('aNm').value = ''; document.getElementById('aH').value = ''; document.getElementById('aM').value = '';
   document.getElementById('atBox').style.display = 'none';
@@ -1189,7 +1314,7 @@ function renderOcs() {
   showEl('discBox');
   setText('discVal', '− ' + fmt(tot));
 }
-function remOc(i) { ST.ocs.splice(i,1); renderOcs(); calc(); }
+function remOc(i) { ST.ocs.splice(i,1); renderOcs(); renderDescontos(); calc(); }
 
 // ══════════════════════════════════════════
 // TAXA ADMINISTRATIVA
@@ -1483,6 +1608,160 @@ function enviarWhatsApp() {
 }
 
 function enviarFechamento() { setStatus('sent'); toast2('📤', 'Marcado como enviado ao cliente.'); }
+
+// ══════════════════════════════════════════════════════════════
+// PÁGINA DE DESCONTOS
+//
+// renderDescontos(): monta a lista de entregadores com seus totais.
+//   Agrupa ST.ocs[] por nome do entregador.
+//   Calcula total por pessoa e total geral.
+//   Atualiza badge da aba e botão de envio.
+//
+// filtrarDisc(tipo, el): filtra a lista por 'todos', 'falta' ou 'atraso'.
+//
+// abrirRelatorioDescontos(): monta texto formatado para WhatsApp.
+//   Um bloco por entregador, listando cada ocorrência e o total.
+//
+// enviarDescWhatsApp(): copia o texto e abre o grupo de pagamentos.
+// ══════════════════════════════════════════════════════════════
+
+let _discFiltro = 'todos'; // filtro ativo: 'todos' | 'falta' | 'atraso'
+
+function renderDescontos() {
+  const ocs = ST.ocs.filter(o => _discFiltro === 'todos' || o.tp === _discFiltro);
+  const total = ST.ocs.reduce((a,o) => a + o.desc, 0);
+  const container = document.getElementById('discByEntregador');
+  const empty = document.getElementById('discEmpty');
+  const btn = document.getElementById('btnEnviarDisc');
+  const badge = document.getElementById('dCount');
+  const hero = document.getElementById('discTotalHero');
+
+  // Atualizar hero total e badge da aba
+  hero.textContent = fmt(total);
+  if (ST.ocs.length > 0) {
+    badge.textContent = ST.ocs.length;
+    badge.style.display = '';
+  } else {
+    badge.style.display = 'none';
+  }
+
+  if (!ocs.length) {
+    container.innerHTML = '';
+    empty.style.display = '';
+    btn.disabled = true;
+    return;
+  }
+  empty.style.display = 'none';
+  btn.disabled = false;
+
+  // Agrupar por entregador
+  const porEntregador = {};
+  ocs.forEach(o => {
+    if (!porEntregador[o.nm]) porEntregador[o.nm] = { ocs:[], total:0 };
+    porEntregador[o.nm].ocs.push(o);
+    porEntregador[o.nm].total += o.desc;
+  });
+
+  // Ordenar por maior desconto primeiro (maior prejuízo no topo)
+  const ordenados = Object.entries(porEntregador).sort((a,b) => b[1].total - a[1].total);
+
+  container.innerHTML = ordenados.map(([nm, dados]) => `
+    <div class="ent-card">
+      <div class="ent-card-head">
+        <div>
+          <div class="ent-name">👤 ${nm}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">${dados.ocs.length} ocorrência${dados.ocs.length>1?'s':''}</div>
+        </div>
+        <div class="ent-total">− ${fmt(dados.total)}</div>
+      </div>
+      <div class="ent-oclist">
+        ${dados.ocs.map(o => `
+          <div class="ent-oc">
+            <div class="ent-oc-left">
+              <span class="badge ${o.tp==='atraso'?'batraso':o.tlb==='Parcial'?'bparcial':'bfalta'}">${o.tlb}</span>
+              <span class="ent-oc-date">${fbr(o.dt)}</span>
+              <span class="ent-oc-det">${o.tp === 'atraso' ? '⏱ Informado pelo cliente · ' : ''}${o.det}</span>
+            </div>
+            <span class="ent-oc-val">− ${fmt(o.desc)}</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function filtrarDisc(tipo, el) {
+  _discFiltro = tipo;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  renderDescontos();
+}
+
+function abrirRelatorioDescontos() {
+  const c = getC(ST.cid);
+  const dtI = document.getElementById('dtI').value;
+  const dtF = document.getElementById('dtF').value;
+  const total = ST.ocs.reduce((a,o) => a + o.desc, 0);
+
+  // Agrupar por entregador
+  const porEntregador = {};
+  ST.ocs.forEach(o => {
+    if (!porEntregador[o.nm]) porEntregador[o.nm] = { ocs:[], total:0 };
+    porEntregador[o.nm].ocs.push(o);
+    porEntregador[o.nm].total += o.desc;
+  });
+  const ordenados = Object.entries(porEntregador).sort((a,b) => b[1].total - a[1].total);
+
+  let txt = '';
+  txt += `⚠️ *DESCONTOS — OSASCO EXPRESS*
+`;
+  txt += `━━━━━━━━━━━━━━━━━━━━
+`;
+  txt += `🏪 ${c ? c.nm : '—'} | ${fbr(dtI)} → ${fbr(dtF)}
+`;
+  txt += `📋 _Descontos informados pelo cliente com base nos atrasos registrados._
+`;
+  txt += `_A Osasco Express repassa os valores exatamente como comunicado._
+
+`;
+
+  ordenados.forEach(([nm, dados]) => {
+    txt += `👤 *${nm}*
+`;
+    dados.ocs.forEach(o => {
+      const icone = o.tp === 'atraso' ? '⏱' : '❌';
+      const origem = o.tp === 'atraso' ? ' (informado pelo cliente)' : '';
+      txt += `  ${icone} ${fbr(o.dt)} — ${o.tlb}${origem}: − ${fmt(o.desc)}
+`;
+      if (o.det) txt += `     Duração: ${o.det}
+`;
+    });
+    txt += `  *Total: − ${fmt(dados.total)}*
+
+`;
+  });
+
+  txt += `━━━━━━━━━━━━━━━━━━━━
+`;
+  txt += `💸 *TOTAL DESCONTADO: − ${fmt(total)}*
+
+`;
+  txt += `📌 _Estes valores foram comunicados pelo cliente e são repassados integralmente. Dúvidas? Fale com a Osasco Express antes do pagamento._
+`;
+  txt += `_Atrasos repetidos dão ao cliente o direito de solicitar a substituição do prestador._
+`;
+  txt += `
+_Osasco Express — ${new Date().toLocaleDateString('pt-BR')}_`;
+
+  document.getElementById('relDescTexto').textContent = txt;
+  openOv('ovRelatorioDesc');
+}
+
+function enviarDescWhatsApp() {
+  const txt = document.getElementById('relDescTexto').textContent;
+  navigator.clipboard.writeText(txt).then(() => {
+    toast2('✅', 'Texto copiado! Cole no grupo.');
+    setTimeout(() => window.open('https://chat.whatsapp.com/KAdX4KAiVwC1ICrcXr9CQ3', '_blank'), 800);
+  }).catch(() => window.open('https://chat.whatsapp.com/KAdX4KAiVwC1ICrcXr9CQ3', '_blank'));
+}
 function setStatus(s) {
   ST.status = s;
   const lbls = {draft:'Rascunho', gen:'Gerado', sent:'Enviado'};
@@ -1500,6 +1779,7 @@ function goTab(id, el) {
   document.getElementById('panel-' + id).classList.add('on');
   if (el) el.classList.add('on');
   if (id === 'planos') renderPlansTable();
+  if (id === 'descontos') renderDescontos(); // atualiza ao entrar na aba
 }
 
 // ══════════════════════════════════════════
